@@ -12,6 +12,7 @@ data_list <- lapply(file_name, function(file){
 
 print(data_list)
 
-
+basename(file_name)
 lapply(data_list,names)
 print(lapply(data_list,names))
+cat(sprintf("Sheet name: %d,%s \n",1:length(data_list), basename(file_name)))
