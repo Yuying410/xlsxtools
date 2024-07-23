@@ -11,10 +11,10 @@ read_xlsx_tool <- function(path){
 	data_list <- lapply(file_name, function(file){
 		file_name <- basename(file)  # basename 截資料名稱
 		data <- readxl::read_xlsx(file_name)  #讀xlsx檔案
-		data <- as.data.frame(data) #轉成data.frame 格式
 	})
-	cat("Sheet name :\n")
-	cat(sprintf("%d,%s \n",1:length(data_list), basename(file_name)))
-	cat("column name:\n")
-	print(lapply(data_list,names))
+	column_list <-lapply(data_list,names)
+	column_list <-tibble::as_tibble(column_list,.name_repair = c("universal"))
+	names(column_list) <- basename(file_name)
+	print(column_list)
 }
+
