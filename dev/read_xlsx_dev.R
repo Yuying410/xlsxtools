@@ -1,7 +1,8 @@
 ##### 7/29 ######################
 rm(list = ls())
 path <- system.file("extdata",package = "xlsxtools")
-read_xlsx_tool(path)
+file_paths <- list.files(path, full.names = T) #openxlsx 只讀絕對路徑
+read_xlsx_tool(file_paths)
 
 
 # test
@@ -31,16 +32,17 @@ name_list <- function(all_data) {
 		# 遍歷每個sheet，並對每個sheets執行以下操作
 		lapply(sheet_names, function(sheet_names) {
 			column_names <- names(all_data[[file_names]][[sheet_names]])
-			data.frame(
+			tibble::tibble(
 				file = file_names,
 				sheet = sheet_names,
-				column = column_names,
-				stringsAsFactors = FALSE
+				column = column_names
 			)
 		})
 	})
-	flat_result <- do.call(c, result)
-	final_result <- do.call(rbind, flat_result)
+	flat_result <- dplyr::bind_rows(purrr::flatten(result))
 	final_result
 }
 name_list(all_data)
+
+
+

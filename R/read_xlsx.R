@@ -1,12 +1,4 @@
-# Goal 1：read xlsx file
-# Goal 2：output variable：(file name),sheet name,column name
-# Goal 3：data type is as.tibble
-# pattern to chosse file
-
-# def of function
-read_xlsx_tool <- function(path){
-	file_paths <- list.files(path, full.names = T) #openxlsx 只讀絕對路徑
-
+read_xlsx_tool <- function(file_paths){
 	read_xlsx_sheets <- function(file_path) {
 		sheet_names <- openxlsx::getSheetNames(file_path)
 		sheets_data <- lapply(sheet_names, function(sheet_name) {
@@ -29,16 +21,14 @@ read_xlsx_tool <- function(path){
 			# 遍歷每個sheet，並對每個sheets執行以下操作
 			lapply(sheet_names, function(sheet_names) {
 				column_names <- names(all_data[[file_names]][[sheet_names]])
-				data.frame(
+				tibble::tibble(
 					file = file_names,
 					sheet = sheet_names,
-					column = column_names,
-					stringsAsFactors = FALSE
+					column = column_names
 				)
 			})
 		})
-		flat_result <- do.call(c, result)
-		final_result <- do.call(rbind, flat_result)
+		final_result <- dplyr::bind_rows(purrr::flatten(result))
 		final_result
 	}
 	return(name_list(all_data))
