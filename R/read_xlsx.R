@@ -4,20 +4,21 @@
 # pattern to chosse file
 
 # def of function
-read_xlsx_tool <- function(path1,pattern1){
-	file_names <- list.files(path = path1, pattern = pattern1, full.names = F)
-	sheet_names <- file_names |> lapply(openxlsx::getSheetNames)
-	#抓取所有資料
+read_xlsx_tool <- function(path){
+	file_paths <- list.files(path, full.names = T) #openxlsx 只讀絕對路徑
+
 	read_xlsx_sheets <- function(file_path) {
 		sheet_names <- openxlsx::getSheetNames(file_path)
-		sheets_data <- list()
-		for (sheet_name in sheet_names) {
-			sheets_data[[sheet_name]] <- readxl::read_xlsx(file_path, sheet = sheet_name)
-		}
+		sheets_data <- lapply(sheet_names, function(sheet_name) {
+			readxl::read_xlsx(file_path, sheet = sheet_name)
+		})
+		names(sheets_data) <- sheet_names
 		return(sheets_data)
 	}
-	file_paths <- sapply(file_names, function(x) system.file("extdata", x, package = "xlsxtools"))
+
+	# 讀取所有文件和它們的工作表
 	all_data <- lapply(file_paths, read_xlsx_sheets)
+	names(all_data) <- basename(file_paths)
 
 	#變數名稱表
 	name_list <- function(all_data) {
