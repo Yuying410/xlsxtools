@@ -2,7 +2,7 @@
 rm(list = ls())
 path <- system.file("extdata",package = "xlsxtools")
 file_paths <- list.files(path, full.names = T) #openxlsx 只讀絕對路徑
-read_xlsx_tool(file_paths)
+read_xlsx_name(file_paths)
 
 
 # test
