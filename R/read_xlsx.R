@@ -1,12 +1,14 @@
 #' Overview xlsx files name
 #'
-#' read_xlsx_name() displays the xlsx file name, sheet name, and variable name in the table to browse the data overview
+#' read_xlsx_name(.) displays the xlsx file name, sheet name, and variable name in the table to browse the data overview
 #'
 #' The xlxstools package provides all the files needed to read into a folder at once.
-#' Also can filter out the required files through the pattern in list.files(path,pattern="xxx", full.names = T) and then input the path.
+#' Also can filter out the required files through the pattern in list.files(path,pattern="xxx", full.names = TRUE) and then input the path.
 #'
 #'
-#' @param file_paths The path to the xlsx file (multiple paths are allowed).
+#' @param file_path The path to the xlsx file
+#'
+#' ( read_xlsx_name(.) allows multiple paths, read_xlsx_sheets(.) just only input one path ).
 #'
 #' @return - return a tibble : n × 3. n changes based on the file read.
 #'
@@ -15,17 +17,17 @@
 #' @export
 
 #' @examples
-#' Example 1 :
+#' # Example 1 :
 #' path <- system.file("extdata",package = "xlsxtools")
-#' file_paths <- list.files(path, full.names = T)
-#' read_xlsx_name(file_paths)
+#' file_path <- list.files(path, full.names = TRUE)
+#' read_xlsx_name(file_path)
 #'
-#' Example 2 :
+#' # Example 2 :
 #' path <- system.file("extdata",package = "xlsxtools")
-#' file_paths <- list.files(path,pattern="i", full.names = T)
-#' read_xlsx_name(file_paths)
+#' file_path <- list.files(path,pattern="i", full.names = TRUE)
+#' read_xlsx_name(file_path)
 #'
-read_xlsx_name <- function(file_paths){
+read_xlsx_name <- function(file_path){
 	read_xlsx_sheets <- function(file_path) {
 		sheet_names <- openxlsx::getSheetNames(file_path)
 		sheets_data <- lapply(sheet_names, function(sheet_name) {
@@ -35,8 +37,8 @@ read_xlsx_name <- function(file_paths){
 		return(sheets_data)
 	}
 
-	all_data <- lapply(file_paths, read_xlsx_sheets)
-	names(all_data) <- basename(file_paths)
+	all_data <- lapply(file_path, read_xlsx_sheets)
+	names(all_data) <- basename(file_path)
 
 	#變數名稱表
 	name_list <- function(all_data) {
