@@ -20,12 +20,12 @@ devtools::install_github("Yuying410/xlsxtools")
 
 This is a basic example which shows you how to solve a common problem:
 
-# Example 1 :
+### Example 1 :
 path <- system.file("extdata",package = "xlsxtools")
 file_path <- list.files(path, full.names = TRUE)
 read_xlsx_name(file_path)
 
-# Example 2 :
+### Example 2 :
 path <- system.file("extdata",package = "xlsxtools")
 file_path <- list.files(path,pattern="i", full.names = TRUE)
 read_xlsx_name(file_path)

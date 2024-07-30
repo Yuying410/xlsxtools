@@ -5,7 +5,7 @@ Version: 0.1.0
 Author: Yuying
 Maintainer: Yuying <annie861029@gmail.com>
 Description: This project is mainly for practicing the development process. 
-    The purpose of xlxstools package is to provide all the files needed to read the folder at one time.
+     The purpose of xlxstools package is to provide all the files needed to read the folder at one time.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
