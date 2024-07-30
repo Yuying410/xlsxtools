@@ -1,11 +1,10 @@
 Package: xlsxtools
 Type: Package
-Title: What the Package Does (Title Case) (改)
+Title: Overview xlsx files name
 Version: 0.1.0
 Author: Yuying
-Maintainer: The package maintainer <yourself@somewhere.net> (改)
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description. (改)
+Maintainer: The package maintainer <annie861029@gmail.com>
+Description: The xlxstools package provides all the files needed to read into a folder at once.
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
