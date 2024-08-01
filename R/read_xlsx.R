@@ -61,7 +61,7 @@ extract_column_names <- function(all_data, file_name, sheet_name) {
 # main function
 read_xlsx_name <- function(file_path) {
 	# check input path is xlsx and length!=0
-	valid_paths <- file_paths[file.exists(file_path) & grepl("\\.xlsx$", file_path)]
+	valid_paths <- file_path[file.exists(file_path) & grepl("\\.xlsx$", file_path)]
 	invalid_paths <- file_path[!file.exists(file_path) | !grepl("\\.xlsx$", file_path)]
 	if (length(valid_paths) == 0) {
 		stop("No valid files found in provided paths.")
