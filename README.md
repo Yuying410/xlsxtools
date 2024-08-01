@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-This project is mainly for practicing the development process. 
+This project is mainly for practicing the development process.  
 The goal of xlxstools is to provide all the files needed to read the folder at one time.
 
 ## Installation
