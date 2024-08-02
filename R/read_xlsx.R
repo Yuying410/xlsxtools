@@ -29,22 +29,21 @@
 #'
 # read sheet in one file
 read_xlsx_sheets <- function(file_path) {
-	valid_path <- file_path[file.exists(file_path) & grepl("\\.xlsx$", file_path)]
-	invalid_path <- file_path[!file.exists(file_path) | !grepl("\\.xlsx$", file_path)]
+	valid_path <- file_path[file.exists(file_path)]
+	invalid_path <- file_path[!file.exists(file_path)]
 	if (length(valid_path) == 0) {
-		stop("No valid files found in provided paths.")
+		warning("No valid files found in provided paths.")
 	}
-	if (length(valid_path) != 1) {
-		stop("More than one file path provided, but the path in read_xlsx_sheets() only be one.")
+	if (length(valid_path) > 1) {
+		warning("More than one file path provided, but the path in read_xlsx_sheets() only be one.")
 	}
-	sheet_names <- openxlsx::getSheetNames(file_path)
+	sheet_names <- readxl::excel_sheets(file_path)
 	sheets_data <- lapply(sheet_names, function(sheet_name) {
 		readxl::read_xlsx(file_path, sheet = sheet_name)
 	})
 	names(sheets_data) <- sheet_names
 	return(sheets_data)
 }
-
 #extract sheet names in one file
 extract_sheet_names <- function(all_data, file_name) {
 	sheet_names <- names(all_data[[file_name]])
@@ -60,18 +59,25 @@ extract_column_names <- function(all_data, file_name, sheet_name) {
 
 # main function
 read_xlsx_name <- function(file_path) {
-	# check input path is xlsx and length!=0
-	valid_paths <- file_path[file.exists(file_path) & grepl("\\.xlsx$", file_path)]
-	invalid_paths <- file_path[!file.exists(file_path) | !grepl("\\.xlsx$", file_path)]
-	if (length(valid_paths) == 0) {
-		stop("No valid files found in provided paths.")
-	}
+	# check input path is exists and length!=0
+	valid_paths <- file_path[file.exists(file_path)]
+	invalid_paths <- file_path[!file.exists(file_path)]
 	if (length(invalid_paths) != 0) {
 		warning("\nInvalid paths: \n", paste(invalid_paths, collapse = "\n"),"\n\n",
-				"Valid paths: \n", paste(valid_paths, collapse = "\n"))
+				"Valid paths: \n", paste(valid_paths, collapse = "\n"),"\n")
 	}
-	all_data <- lapply(valid_paths, read_xlsx_sheets)
-	names(all_data) <- basename(valid_paths)
+	valid_xlsx <- lapply(valid_paths, function(path) {
+		tryCatch({
+			read_data <- readxl::read_xlsx(path, n_max = 1)
+			path
+		}, error = function(e) {
+			warning(sprintf("Error reading file : %s \n  readxl::read_xlsx(): %s", basename(path), e$message))
+			NULL
+		})
+	})|> unlist()
+
+	all_data <- lapply(valid_xlsx, read_xlsx_sheets)
+	names(all_data) <- basename(valid_xlsx)
 
 	result <- lapply(names(all_data), function(file_name) {
 		sheet_names <- extract_sheet_names(all_data, file_name)
@@ -88,19 +94,18 @@ read_xlsx_name <- function(file_path) {
 	return(final_result)
 }
 
-
 #' @rdname read_xlsx_name
 #' @export
 read_xlsx_sheets <- function(file_path) {
-	valid_path <- file_path[file.exists(file_path) & grepl("\\.xlsx$", file_path)]
-	invalid_path <- file_path[!file.exists(file_path) | !grepl("\\.xlsx$", file_path)]
+	valid_path <- file_path[file.exists(file_path)]
+	invalid_path <- file_path[!file.exists(file_path)]
 	if (length(valid_path) == 0) {
-		stop("No valid files found in provided paths.")
+		warning("No valid files found in provided paths.")
 	}
-	if (length(valid_path) != 1) {
-		stop("More than one file path provided, but the path in read_xlsx_sheets() only be one.")
+	if (length(valid_path) > 1) {
+		warning("More than one file path provided, but the path in read_xlsx_sheets() only be one.")
 	}
-	sheet_names <- openxlsx::getSheetNames(file_path)
+	sheet_names <- readxl::excel_sheets(file_path)
 	sheets_data <- lapply(sheet_names, function(sheet_name) {
 		readxl::read_xlsx(file_path, sheet = sheet_name)
 	})
