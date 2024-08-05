@@ -18,5 +18,6 @@ Imports:
     readxl,
     tibble
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    writexl
 Config/testthat/edition: 3

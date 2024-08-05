@@ -25,8 +25,7 @@ test_that(" NA files ignored with warning", {
 	temp_file1 <- file.path(temp_dir, "temp_file1.xlsx") # write.csv
 	writexl::write_xlsx(data.frame(), temp_file1)
 
-	results <- read_xlsx_name(c(temp_file1,"12455"))
-	expect_warning(read_xlsx_name(c(temp_file1,"12455")))
+	expect_warning(results <- read_xlsx_name(c(temp_file1,"12455")))
 	expect_equal(results,  tibble::tibble(file = character(), sheet = character(), column = character()))
 })
 
@@ -54,9 +53,8 @@ test_that("corrupted .xlsx files ignored with warning", {
 	file_path <- list.files(temp_dir, full.names = TRUE)
 	file_paths <- c(file_path, file.path(temp_dir, "nonexistent.xlsx"))
 
-	results <- read_xlsx_name(file_paths)
 	# constructive::construct(results)
-	expect_warning(read_xlsx_name(file_paths))
+	expect_warning(	results <- read_xlsx_name(file_paths))
 	expected <- tibble::tibble(
 		file = rep(c("temp_file3.csv", "temp_file4.xlsx"), each = 11L),
 		sheet = rep("Sheet1", 22L),

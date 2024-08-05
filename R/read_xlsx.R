@@ -1,21 +1,23 @@
 #' Overview xlsx files name
 #'
-#' read_xlsx_name(.) displays the xlsx file name, sheet name, and variable name in the table to browse the data overview
+#' read_xlsx_name(.) displays the xlsx file name, sheet name, and variable name
+#' in the table to browse the data overview.
 #'
-#' The xlxstools package provides all the files needed to read into a folder at once.
-#' Also can filter out the required files through the pattern in list.files(path,pattern="xxx", full.names = TRUE) and then input the path.
+#' The xlxstools package provides all the files needed to read into a folder at
+#' once.
 #'
+#' Also can filter out the required files through the pattern in
+#' list.files(path,pattern="xxx", full.names = TRUE) and then input the path.
 #'
-#' @param file_path The path to the xlsx file
+#' @param file_path The path/paths to the xlsx file.
 #'
-#' ( read_xlsx_name(.) allows multiple file paths, read_xlsx_sheets(.) just only input one file path ).
-#'
-#' @return - return a tibble : n × 3. n changes based on the file read.
+#' @return read_xlsx_name(.):
+#' - return a tibble : n × 3. n changes based on the file read.
 #'
 #' - The type of the column is character, and the column's name is "File", "Sheet", "Column".
-#'
-#' @export
 
+#' @export
+#'
 #' @examples
 #' # Example 1 :
 #' path <- system.file("extdata",package = "xlsxtools")
@@ -26,28 +28,6 @@
 #' path <- system.file("extdata",package = "xlsxtools")
 #' file_path <- list.files(path,pattern="i", full.names = TRUE)
 #' read_xlsx_name(file_path)
-#'
-# read sheet in one file
-read_xlsx_sheets <- function(file_path) {
-	sheet_names <- readxl::excel_sheets(file_path)
-	sheets_data <- lapply(sheet_names, function(sheet_name) {
-		readxl::read_xlsx(file_path, sheet = sheet_name)
-	})
-	names(sheets_data) <- sheet_names
-	return(sheets_data)
-}
-#extract sheet names in one file
-extract_sheet_names <- function(all_data, file_name) {
-	sheet_names <- names(all_data[[file_name]])
-	return(sheet_names)
-}
-
-#extract column names in one sheet
-extract_column_names <- function(all_data, file_name, sheet_name) {
-	column_names <- names(all_data[[file_name]][[sheet_name]])
-	return(column_names)
-}
-
 
 # main function
 read_xlsx_name <- function(file_path) {
@@ -83,8 +63,7 @@ read_xlsx_name <- function(file_path) {
 	return(final_result)
 }
 
-#' @rdname read_xlsx_name
-#' @export
+# read sheet in one file
 read_xlsx_sheets <- function(file_path) {
 	sheet_names <- readxl::excel_sheets(file_path)
 	sheets_data <- lapply(sheet_names, function(sheet_name) {
@@ -93,3 +72,15 @@ read_xlsx_sheets <- function(file_path) {
 	names(sheets_data) <- sheet_names
 	return(sheets_data)
 }
+#extract sheet names in one file
+extract_sheet_names <- function(all_data, file_name) {
+	sheet_names <- names(all_data[[file_name]])
+	return(sheet_names)
+}
+
+#extract column names in one sheet
+extract_column_names <- function(all_data, file_name, sheet_name) {
+	column_names <- names(all_data[[file_name]][[sheet_name]])
+	return(column_names)
+}
+

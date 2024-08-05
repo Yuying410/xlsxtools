@@ -5,13 +5,6 @@ file.exists(path)
 file_paths <- list.files(path, full.names = T)
 read_xlsx_name(file_paths)
 
-
-valid_path <- valid_paths
-file_path <- file_paths
-file_path <- c("1")
-path <- file_path
-read_xlsx_name(file_path)
-
 # read sheet in one file
 read_xlsx_sheets <- function(file_path) {
 	valid_path <- file_path[file.exists(file_path)]
@@ -42,7 +35,7 @@ extract_column_names <- function(all_data, file_name, sheet_name) {
 }
 
 
-# main function
+# main function 8/5
 read_xlsx_name <- function(file_path) {
 	all_warnings <- list()
 	valid_xlsx <- lapply(file_path, function(path) {

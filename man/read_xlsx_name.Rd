@@ -2,29 +2,29 @@
 % Please edit documentation in R/read_xlsx.R
 \name{read_xlsx_name}
 \alias{read_xlsx_name}
-\alias{read_xlsx_sheets}
 \title{Overview xlsx files name}
 \usage{
 read_xlsx_name(file_path)
-
-read_xlsx_sheets(file_path)
 }
 \arguments{
-\item{file_path}{The path to the xlsx file
-
-( read_xlsx_name(.) allows multiple paths, read_xlsx_sheets(.) just only input one path ).}
+\item{file_path}{The path/paths to the xlsx file.}
 }
 \value{
+read_xlsx_name(.):
 - return a tibble : n × 3. n changes based on the file read.
 
 - The type of the column is character, and the column's name is "File", "Sheet", "Column".
 }
 \description{
-read_xlsx_name(.) displays the xlsx file name, sheet name, and variable name in the table to browse the data overview
+read_xlsx_name(.) displays the xlsx file name, sheet name, and variable name
+in the table to browse the data overview.
 }
 \details{
-The xlxstools package provides all the files needed to read into a folder at once.
-Also can filter out the required files through the pattern in list.files(path,pattern="xxx", full.names = TRUE) and then input the path.
+The xlxstools package provides all the files needed to read into a folder at
+once.
+
+Also can filter out the required files through the pattern in
+list.files(path,pattern="xxx", full.names = TRUE) and then input the path.
 }
 \examples{
 # Example 1 :
@@ -36,5 +36,4 @@ read_xlsx_name(file_path)
 path <- system.file("extdata",package = "xlsxtools")
 file_path <- list.files(path,pattern="i", full.names = TRUE)
 read_xlsx_name(file_path)
-
 }
