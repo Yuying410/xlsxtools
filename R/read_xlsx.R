@@ -29,14 +29,6 @@
 #'
 # read sheet in one file
 read_xlsx_sheets <- function(file_path) {
-	valid_path <- file_path[file.exists(file_path)]
-	invalid_path <- file_path[!file.exists(file_path)]
-	if (length(valid_path) == 0) {
-		warning("No valid files found in provided paths.")
-	}
-	if (length(valid_path) > 1) {
-		warning("More than one file path provided, but the path in read_xlsx_sheets() only be one.")
-	}
 	sheet_names <- readxl::excel_sheets(file_path)
 	sheets_data <- lapply(sheet_names, function(sheet_name) {
 		readxl::read_xlsx(file_path, sheet = sheet_name)
@@ -59,23 +51,20 @@ extract_column_names <- function(all_data, file_name, sheet_name) {
 
 # main function
 read_xlsx_name <- function(file_path) {
-	# check input path is exists and length!=0
-	valid_paths <- file_path[file.exists(file_path)]
-	invalid_paths <- file_path[!file.exists(file_path)]
-	if (length(invalid_paths) != 0) {
-		warning("\nInvalid paths: \n", paste(invalid_paths, collapse = "\n"),"\n\n",
-				"Valid paths: \n", paste(valid_paths, collapse = "\n"),"\n")
-	}
-	valid_xlsx <- lapply(valid_paths, function(path) {
+	all_warnings <- list()
+	valid_xlsx <- lapply(file_path, function(path) {
 		tryCatch({
 			read_data <- readxl::read_xlsx(path, n_max = 1)
 			path
 		}, error = function(e) {
-			warning(sprintf("Error reading file : %s \n  readxl::read_xlsx(): %s", basename(path), e$message))
+			all_warnings <<- c(all_warnings, sprintf("readxl::read_xlsx(): %s", e$message))
 			NULL
 		})
-	})|> unlist()
+	}) |> unlist()
 
+	if (length(all_warnings) > 0) {
+		warning(paste(all_warnings, collapse = "\n"))
+	}
 	all_data <- lapply(valid_xlsx, read_xlsx_sheets)
 	names(all_data) <- basename(valid_xlsx)
 
@@ -97,14 +86,6 @@ read_xlsx_name <- function(file_path) {
 #' @rdname read_xlsx_name
 #' @export
 read_xlsx_sheets <- function(file_path) {
-	valid_path <- file_path[file.exists(file_path)]
-	invalid_path <- file_path[!file.exists(file_path)]
-	if (length(valid_path) == 0) {
-		warning("No valid files found in provided paths.")
-	}
-	if (length(valid_path) > 1) {
-		warning("More than one file path provided, but the path in read_xlsx_sheets() only be one.")
-	}
 	sheet_names <- readxl::excel_sheets(file_path)
 	sheets_data <- lapply(sheet_names, function(sheet_name) {
 		readxl::read_xlsx(file_path, sheet = sheet_name)

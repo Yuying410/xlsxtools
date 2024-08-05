@@ -1,4 +1,4 @@
-test_that("1. Confirm that the result of the new function is still correct", {
+test_that("Confirm that the result of the new function is still correct", {
 	# Example :
 	path <- system.file("extdata",package = "xlsxtools")
 	file_path <- list.files(path, full.names = TRUE)
@@ -20,7 +20,18 @@ test_that("1. Confirm that the result of the new function is still correct", {
 	expect_equal(result, expected)
 })
 
-test_that("2. corrupted .xlsx files ignored with warning", {
+test_that(" NA files ignored with warning", {
+	temp_dir <- tempdir()
+	temp_file1 <- file.path(temp_dir, "temp_file1.xlsx") # write.csv
+	writexl::write_xlsx(data.frame(), temp_file1)
+
+	results <- read_xlsx_name(c(temp_file1,"12455"))
+	expect_warning(read_xlsx_name(c(temp_file1,"12455")))
+	expect_equal(results,  tibble::tibble(file = character(), sheet = character(), column = character()))
+})
+
+
+test_that("corrupted .xlsx files ignored with warning", {
 	temp_dir <- tempdir()
 	temp_file1 <- file.path(temp_dir, "temp_file1.csv") # csv -> csv
 	temp_file2 <- file.path(temp_dir, "temp_file2.xlsx") # xlsx -> csv
@@ -41,12 +52,11 @@ test_that("2. corrupted .xlsx files ignored with warning", {
 	writexl::write_xlsx(mtcars, temp_file4)
 
 	file_path <- list.files(temp_dir, full.names = TRUE)
-	file_paths <- c(file_path, file.path(temp_dir, "nonexistent.xlsx"), 123548)
+	file_paths <- c(file_path, file.path(temp_dir, "nonexistent.xlsx"))
 
 	results <- read_xlsx_name(file_paths)
 	# constructive::construct(results)
-	suppressWarnings(expect_warning(read_xlsx_name(file_paths)))
-	#expect_warning(expect_warning(expect_warning(expect_warning(read_xlsx_name(file_paths)))))
+	expect_warning(read_xlsx_name(file_paths))
 	expected <- tibble::tibble(
 		file = rep(c("temp_file3.csv", "temp_file4.xlsx"), each = 11L),
 		sheet = rep("Sheet1", 22L),
@@ -57,28 +67,3 @@ test_that("2. corrupted .xlsx files ignored with warning", {
 	)
 	expect_equal(results, expected) # later, we should allow the "csv" file
 })
-
-
-# 原始
-test_that("corrupted .xlsx files ignored with warning", {
-	temp_dir <- tempdir()
-	temp_file1 <- file.path(temp_dir, "temp_file1.xlsx") # write.csv
-	temp_file2 <- file.path(temp_dir, "temp_file2.xlsx") # write.xlsx
-	write.csv(mtcars, temp_file1)
-	writexl::write_xlsx(mtcars, temp_file2)
-
-	file_paths <- c(temp_file1, temp_file2, file.path(temp_dir, "nonexistent.xlsx"),123568)
-	expect_warning(expect_warning(results <- read_xlsx_name(file_paths)))
-
-	#expect_equal(results, tibble(file = character(), sheet = character(), column = character()))
-
-	expected <- tibble::tibble(
-		file = rep("temp_file2.xlsx", 11L),
-		sheet = rep("Sheet1", 11L),
-		column = c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb"),
-	)
-
-	expect_warning(result <- read_xlsx_name(c(temp_file1, temp_file2)))
-	expect_equal(result, expected)
-})
-

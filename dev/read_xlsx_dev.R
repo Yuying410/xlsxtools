@@ -44,23 +44,20 @@ extract_column_names <- function(all_data, file_name, sheet_name) {
 
 # main function
 read_xlsx_name <- function(file_path) {
-	# check input path is exists and length!=0
-	valid_paths <- file_path[file.exists(file_path)]
-	invalid_paths <- file_path[!file.exists(file_path)]
-	if (length(invalid_paths) != 0) {
-		warning("\nInvalid paths: \n", paste(invalid_paths, collapse = "\n"),"\n\n",
-				"Valid paths: \n", paste(valid_paths, collapse = "\n"),"\n")
-	}
-	valid_xlsx <- lapply(valid_paths, function(path) {
+	all_warnings <- list()
+	valid_xlsx <- lapply(file_path, function(path) {
 		tryCatch({
 			read_data <- readxl::read_xlsx(path, n_max = 1)
 			path
 		}, error = function(e) {
-			warning(sprintf("Error reading file : %s \n  readxl::read_xlsx(): %s", basename(path), e$message))
+			all_warnings <<- c(all_warnings, sprintf("readxl::read_xlsx(): %s", e$message))
 			NULL
 		})
-	})|> unlist()
+	}) |> unlist()
 
+	if (length(all_warnings) > 0) {
+		warning(paste(all_warnings, collapse = "\n"))
+	}
 	all_data <- lapply(valid_xlsx, read_xlsx_sheets)
 	names(all_data) <- basename(valid_xlsx)
 

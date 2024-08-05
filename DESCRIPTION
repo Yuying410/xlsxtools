@@ -14,7 +14,6 @@ BugReports: https://github.com/Yuying410/xlsxtools/issues
 RoxygenNote: 7.3.2
 Imports: 
     dplyr,
-    openxlsx,
     purrr,
     readxl,
     tibble
